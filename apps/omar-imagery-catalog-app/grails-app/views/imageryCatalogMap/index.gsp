@@ -14,7 +14,7 @@
       work correctly both with client-side routing and a non-root public URL.
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
-    <title>Welcome to Grails + React</title>
+    <title>DG Image Collects</title>
 </head>
 
 <body>
@@ -29,7 +29,10 @@
       To begin the development, run `npm start`.
       To create a production bundle, use `npm run build`.
     -->
-
+<asset:script>
+  const PARAMS = ${raw(collectsParams?.encodeAsJSON()?.toString())}
+</asset:script>
+<asset:deferredScripts/>
 <asset:javascript src="bundle.js"/>
 </body>
 </html>

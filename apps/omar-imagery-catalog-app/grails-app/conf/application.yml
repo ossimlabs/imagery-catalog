@@ -130,3 +130,28 @@ environments:
                 testOnReturn: false
                 jdbcInterceptors: ConnectionState
                 defaultTransactionIsolation: 2 # TRANSACTION_READ_COMMITTED
+---
+openlayers:
+    config:
+        baseMaps:
+        -   layerType: "tilewms"
+            title: "OSM Basic"
+            url: "https://omar-dev.ossim.io/omar-mapproxy/service"
+            params:
+                LAYERS: "o2-basemap-basic"
+                FORMAT: "image/jpeg"
+            options:
+                visible: true
+        # Uncomment the example below, and modify to add
+        # a custom overlay layer
+        # overlays:
+        # -   layerType: "tilewms"
+        #     title: "Collects"
+        #     url: "/collects/getTile"
+        #     params:
+        #         LAYERS: "collects"
+        #         FORMAT: "image/png"
+        #         VERSION: "1.1.1"
+        #     options:
+        #         visible: true
+        zoomFilterChangeLevel: 10
