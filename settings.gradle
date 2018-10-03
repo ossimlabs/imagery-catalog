@@ -1,0 +1,7 @@
+include 'omar-imagery-catalog-lib',
+        'omar-imagery-catalog-plugin',
+        'omar-imagery-catalog-app'
+
+project(':omar-imagery-catalog-lib').projectDir = "${rootProject.projectDir}/libs/omar-imagery-catalog-lib" as File
+project(':omar-imagery-catalog-plugin').projectDir = "${rootProject.projectDir}/plugins/omar-imagery-catalog-plugin" as File
+project(':omar-imagery-catalog-app').projectDir = "${rootProject.projectDir}/apps/omar-imagery-catalog-app" as File

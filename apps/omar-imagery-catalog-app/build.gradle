@@ -1,0 +1,5 @@
+grails {
+	plugins {
+		compile project( ':omar-imagery-catalog-plugin' )
+	}
+}
