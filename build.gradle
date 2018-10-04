@@ -22,11 +22,13 @@ subprojects { project ->
 	version versionNumber
 	group groupId
 	
+	apply from: "${rootProject.projectDir}/geoscript.gradle"
+	
 	if ( isGrailsProject )
 	{
-		
 		apply plugin: "eclipse"
 		apply plugin: "idea"
+		
 		
 		if ( isGrailsApp )
 		{
