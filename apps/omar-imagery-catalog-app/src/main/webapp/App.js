@@ -3,6 +3,7 @@ import React, { Component } from "react";
 import { SERVER_URL, CLIENT_VERSION, REACT_VERSION } from "./config";
 import "whatwg-fetch";
 
+import { Button } from 'mdbreact';
 import OlMap from "./OlMap";
 
 class App extends Component {
@@ -17,6 +18,9 @@ class App extends Component {
   //     }
   //   };
   // }
+  handleDeepScan = () => {
+    console.log('Handling Deep Scan!');
+  }
 
   componentDidMount() {}
 
@@ -24,11 +28,19 @@ class App extends Component {
     return (
       <div>
         <div>
-          <div id="content">
-            <section>
-              <h1 style={{ textAlign: "center" }}>OMAR Imagery Catalog</h1>
-              <OlMap />
-            </section>
+          <div className="container-fluid">
+            <div className="row">
+              <div className="col">
+              <h1>OMAR Imagery Catalog</h1>
+              </div>
+              <Button color="primary" onClick={this.handleDeepScan}>Deep</Button>
+              <Button color="primary">Incremental</Button>
+            </div>
+            <div className="row">
+              <div className="col">
+                <OlMap />
+              </div>
+            </div>
           </div>
         </div>
       </div>

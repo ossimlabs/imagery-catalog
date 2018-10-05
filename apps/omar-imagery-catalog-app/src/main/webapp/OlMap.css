@@ -1,0 +1,12 @@
+#map {
+    /* background-color: #000000; */
+    height: 450px;
+    /* position: absolute;
+    left: 20px;
+    bottom: 10px;
+    width: 200px; */
+    z-index: 1;
+  }
+  .ol-viewport {
+    border-radius: 5px;
+  }
