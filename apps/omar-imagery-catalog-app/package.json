@@ -22,6 +22,7 @@
     "file-loader": "0.11.1",
     "img-loader": "2.0.0",
     "jsdom": "10.1.0",
+    "mdbreact": "^4.8.0",
     "mocha": "3.3.0",
     "mocha-image-compiler": "1.0.0",
     "ol": "^5.2.0",
