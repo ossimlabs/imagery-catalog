@@ -8,6 +8,6 @@ class BucketController
 	
 	def scanBucket()
 	{
-		bucketService.scanBucket( request.JSON )
+		render bucketService.scanBucket( request.JSON )
 	}
 }
