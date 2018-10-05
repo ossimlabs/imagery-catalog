@@ -21,8 +21,11 @@ class App extends Component {
   handleDeepScan = () => {
     console.log('Handling Deep Scan!');
 
-    fetch(`${SERVER_URL}/someCoolPath?ASuperCoolId=${myId}`)
-      .then(r => r.json())
+    fetch('http://localhost:8080/bucket/scanBucket',{
+        method: 'post',
+        body: JSON.stringify({scanType: `deep`})
+    })
+    .then(r => r.json())
       .then(json => {
         if (json.error === 500) {
           console.log('Server error!');
@@ -32,6 +35,24 @@ class App extends Component {
       .catch(error => console.error("Error connecting to server: " + error));
 
   }
+
+   handleIncrementalScan = () => {
+      console.log('Handling Incremental Scan!');
+
+      fetch('http://localhost:8080/bucket/scanBucket', {
+        method: 'post',
+        body: JSON.stringify({scanType: `incremental`})
+      })
+        .then(r => r.json())
+        .then(json => {
+          if (json.error === 500) {
+            console.log('Server error!');
+          }
+          console.log(json);
+        })
+        .catch(error => console.error("Error connecting to server: " + error));
+
+    }
 
   componentDidMount() {}
 
@@ -45,7 +66,7 @@ class App extends Component {
               <h1>OMAR Imagery Catalog</h1>
               </div>
               <Button color="primary" onClick={this.handleDeepScan}>Deep</Button>
-              <Button color="primary">Incremental</Button>
+              <Button color="primary" onClick={this.handleIncrementalScan}>Incremental</Button>
             </div>
             <div className="row">
               <div className="col">

@@ -21,6 +21,6 @@ class BucketService
 		
 		ScanBucketJob.triggerNow( scanParams )
 		
-		[ contentType: 'application/json', text: "${ new Date() }" ]
+		[ contentType: 'application/json', text: new JSONObject( timeStarted: new Date().format( "yyyy-MM-dd'T'HH:mm:dd.ss.SSS'Z'", TimeZone.getTimeZone( 'UTC' ) ) ).toString() ]
 	}
 }
