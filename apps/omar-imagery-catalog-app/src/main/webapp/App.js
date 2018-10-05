@@ -20,6 +20,17 @@ class App extends Component {
   // }
   handleDeepScan = () => {
     console.log('Handling Deep Scan!');
+
+    fetch(`${SERVER_URL}/someCoolPath?ASuperCoolId=${myId}`)
+      .then(r => r.json())
+      .then(json => {
+        if (json.error === 500) {
+          console.log('Server error!');
+        }
+        console.log(json);
+      })
+      .catch(error => console.error("Error connecting to server: " + error));
+
   }
 
   componentDidMount() {}
