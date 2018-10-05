@@ -1,4 +1,5 @@
 apply plugin: 'groovy'
+
 repositories {
     maven { url "${ System.getenv( 'REPOSITORY_MANAGER_URL' ) ?: 'https://nexus.ossim.io/nexus/content/repositories' }" }
     maven { url "http://download.osgeo.org/webdav/geotools/" }
@@ -24,5 +25,6 @@ dependencies {
         exclude module: 'aws-java-sdk'
     }
     
+    compile group: 'org.codehaus.gpars', name: 'gpars', version: '1.2.1'
     compile 'org.codehaus.groovy:groovy-all:2.4.15'
 }
