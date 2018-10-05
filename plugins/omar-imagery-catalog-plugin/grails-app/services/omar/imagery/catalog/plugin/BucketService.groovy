@@ -7,22 +7,24 @@ import com.amazonaws.services.s3.model.GetObjectRequest
 import com.amazonaws.services.s3.model.GetObjectMetadataRequest
 import com.amazonaws.services.s3.model.ListObjectsV2Request
 import com.amazonaws.services.s3.model.ListObjectsV2Result
+import org.grails.web.json.JSONObject
 import org.springframework.beans.factory.annotation.Value
 
 import static groovyx.gpars.GParsPool.withPool
 
 class BucketService
 {
+	public static final SCAN_INCREMENTAL = "incremental"
+	public static final SCAN_DEEP = "deep"
+	
 	@Value( '${aws.bucketName}' )
 	String bucketName
 	
 	@Value( '${aws.profileName}' )
 	String profileName
 	
-	def serviceMethod()
+	def scanBucket( JSONObject jsonObject )
 	{
-		String startAfter = 'I00000140895_01'
-		
 		AmazonS3 s3Client = AmazonS3ClientBuilder.standard()
 			.withCredentials( new ProfileCredentialsProvider( profileName ) )
 //			.withRegion( clientRegion )
@@ -30,8 +32,14 @@ class BucketService
 		
 		ListObjectsV2Request request = new ListObjectsV2Request()
 			.withBucketName( bucketName )
-			.withStartAfter( startAfter )
 			.withDelimiter( '/' )
+		
+		if ( jsonObject.scanType == SCAN_INCREMENTAL )
+		{
+			String startAfter = 'I00000140895_01'
+			
+			request = request.withStartAfter( startAfter )
+		}
 		
 		ListObjectsV2Result result
 		
@@ -80,6 +88,5 @@ class BucketService
 		def stop = System.currentTimeMillis()
 		
 		println "${ stop - start }"
-		
 	}
 }
