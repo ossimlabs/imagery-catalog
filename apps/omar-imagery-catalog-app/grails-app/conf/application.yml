@@ -161,6 +161,7 @@ openlayers:
 aws:
     profileName: "svc_radiant_omar_1b"
     bucketName: "dg-1b-3090-t1"
+    clientRegion: "us-east-1"
 
 collects:
     databaseName: 'dg-bucket-db-prod'
