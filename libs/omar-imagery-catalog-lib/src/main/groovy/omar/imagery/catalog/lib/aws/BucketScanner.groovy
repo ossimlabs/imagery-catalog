@@ -58,6 +58,7 @@ class BucketScanner
 								
 								def readMe = new XmlSlurper().parse( fullObject?.objectContent )
 								
+								
 								out.println "${ prefix },${ readMe.NWLONG.text() },${ readMe.SELAT.text() },${ readMe.SELONG.text() },${ readMe.NWLAT.text() },${ readMe.COLLECTIONSTART.text() },${ readMe.COLLECTIONSTOP.text() }"
 							}
 						}
