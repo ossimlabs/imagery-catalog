@@ -3,8 +3,12 @@ import React, { Component } from "react";
 import { SERVER_URL, CLIENT_VERSION, REACT_VERSION } from "./config";
 import "whatwg-fetch";
 
-import { Button } from 'mdbreact';
+import { Button } from "mdbreact";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import OlMap from "./OlMap";
+
+import moment from "moment";
 
 class App extends Component {
   // constructor() {
@@ -18,41 +22,46 @@ class App extends Component {
   //     }
   //   };
   // }
-  handleDeepScan = () => {
-    console.log('Handling Deep Scan!');
+  notify = (type, time) =>
+    toast.success(`${type} scan started successfully at ${time} `, {
+      position: toast.POSITION.BOTTOM_CENTER
+    });
 
-    fetch('http://localhost:8080/bucket/scanBucket',{
-        method: 'post',
-        body: JSON.stringify({scanType: `deep`})
+  handleDeepScan = () => {
+    console.log("Handling Deep Scan!");
+
+    fetch("http://localhost:8080/bucket/scanBucket", {
+      method: "post",
+      body: JSON.stringify({ scanType: `deep` })
     })
-    .then(r => r.json())
+      .then(r => r.json())
       .then(json => {
         if (json.error === 500) {
-          console.log('Server error!');
+          console.log("Server error!");
         }
-        console.log(json);
+
+        this.notify("Deep", json.timeStarted);
       })
       .catch(error => console.error("Error connecting to server: " + error));
+  };
 
-  }
+  handleIncrementalScan = () => {
+    console.log("Handling Incremental Scan!");
 
-   handleIncrementalScan = () => {
-      console.log('Handling Incremental Scan!');
+    fetch("http://localhost:8080/bucket/scanBucket", {
+      method: "post",
+      body: JSON.stringify({ scanType: `incremental` })
+    })
+      .then(r => r.json())
+      .then(json => {
+        if (json.error === 500) {
+          console.log("Server error!");
+        }
 
-      fetch('http://localhost:8080/bucket/scanBucket', {
-        method: 'post',
-        body: JSON.stringify({scanType: `incremental`})
+        this.notify("Incremental", json.timeStarted);
       })
-        .then(r => r.json())
-        .then(json => {
-          if (json.error === 500) {
-            console.log('Server error!');
-          }
-          console.log(json);
-        })
-        .catch(error => console.error("Error connecting to server: " + error));
-
-    }
+      .catch(error => console.error("Error connecting to server: " + error));
+  };
 
   componentDidMount() {}
 
@@ -63,14 +72,19 @@ class App extends Component {
           <div className="container-fluid">
             <div className="row">
               <div className="col">
-              <h1>OMAR Imagery Catalog</h1>
+                <h1>OMAR Imagery Catalog</h1>
               </div>
-              <Button color="primary" onClick={this.handleDeepScan}>Deep</Button>
-              <Button color="primary" onClick={this.handleIncrementalScan}>Incremental</Button>
+              <Button color="primary" onClick={this.handleDeepScan}>
+                Deep
+              </Button>
+              <Button color="primary" onClick={this.handleIncrementalScan}>
+                Incremental
+              </Button>
             </div>
             <div className="row">
               <div className="col">
                 <OlMap />
+                <ToastContainer />
               </div>
             </div>
           </div>
