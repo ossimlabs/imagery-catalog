@@ -7,20 +7,26 @@ class BucketService
 {
 	@Value( '${aws.bucketName}' )
 	String bucketName
-	
+
 	@Value( '${aws.profileName}' )
 	String profileName
-	
+
+	@Value( '${aws.clientRegion}' )
+	String clientRegion
+
 	def scanBucket( JSONObject jsonObject )
 	{
 		def scanParams = [
 			scanType: jsonObject.scanType,
 			profileName: profileName,
 			bucketName: bucketName,
+			clientRegion: clientRegion
 		]
-		
+
+		println scanParams
+
 		ScanBucketJob.triggerNow( scanParams )
-		
+
 		[ contentType: 'application/json', text: new JSONObject( timeStarted: new Date().format( "yyyy-MM-dd'T'HH:mm:dd.ss.SSS'Z'", TimeZone.getTimeZone( 'UTC' ) ) ).toString() ]
 	}
 }
