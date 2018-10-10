@@ -8,7 +8,6 @@ import LayerGroup from "ol/layer/Group";
 import TileLayer from "ol/layer/Tile";
 import TileWMS from "ol/source/TileWMS.js";
 import LayerSwitcher from "ol-layerswitcher";
-
 import "./OlMap.css";
 
 class OlMap extends Component {

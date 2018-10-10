@@ -1,13 +1,10 @@
 import React, { Component } from "react";
-
-import { SERVER_URL, CLIENT_VERSION, REACT_VERSION } from "./config";
 import "whatwg-fetch";
-
 import { Button } from "mdbreact";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import OlMap from "./OlMap";
-
+import CollectsTable from "./CollectsTable";
 import moment from "moment";
 
 class App extends Component {
@@ -75,6 +72,11 @@ class App extends Component {
               <div className="col">
                 <OlMap />
                 <ToastContainer />
+              </div>
+            </div>
+            <div className="row">
+              <div className="col">
+                <CollectsTable />
               </div>
             </div>
           </div>
