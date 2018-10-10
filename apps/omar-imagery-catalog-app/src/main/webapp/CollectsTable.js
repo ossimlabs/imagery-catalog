@@ -1,6 +1,5 @@
 import React from 'react';
 import { MDBDataTable } from 'mdbreact';
-import "./CollectsTable.css";
 
 const CollectsTable = () => {
   const data = {
