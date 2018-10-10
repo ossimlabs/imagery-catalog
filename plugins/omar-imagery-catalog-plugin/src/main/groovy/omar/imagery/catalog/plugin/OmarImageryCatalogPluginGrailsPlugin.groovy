@@ -23,6 +23,7 @@ class OmarImageryCatalogPluginGrailsPlugin extends Plugin
 Brief summary/description of the plugin.
 '''
 	def profiles = [ 'web' ]
+	List loadAfter = [ 'quartz', 'quartz-monitor' ]
 	
 	// URL to the plugin's documentation
 	def documentation = "http://grails.org/plugin/omar-imagery-catalog-plugin"
@@ -51,7 +52,7 @@ Brief summary/description of the plugin.
 			geoScriptNamespaceInfoConverter( GeoScriptConfig.GeoScriptNamespaceInfoConverter )
 			geoScriptWorkspaceInfoConverter( GeoScriptConfig.GeoScriptWorkspaceInfoConverter )
 			geoScriptLayerInfoConverter( GeoScriptConfig.GeoScriptLayerInfoConverter )
-	}
+		}
 	}
 	
 	void doWithDynamicMethods()
