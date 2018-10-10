@@ -151,7 +151,7 @@ openlayers:
       title: "Collects"
       url: "/collects/getTile"
       params:
-        LAYERS: "image_collect"
+        LAYERS: "collects"
         FORMAT: "image/png"
         VERSION: "1.1.1"
       options:
@@ -159,79 +159,40 @@ openlayers:
     zoomFilterChangeLevel: 10
 
 ---
-environments:
-  development:
-    aws:
-      profileName: "svc_radiant_omar_1b"
-      bucketName: "dg-1b-3090-t1"
-      clientRegion: "us-east-1"
+aws:
+  profileName: "svc_radiant_omar_1b"
+  bucketName: "dg-1b-3090-t1"
+  clientRegion: "us-east-1"
 
-    collects:
-      databaseName: 'dg-bucket-db-dev'
+collects:
+  databaseName: 'dg-bucket-db-prod'
 
-    geoscript:
-      config:
-        namespaces:
-        - prefix: omar
-          uri: http://omar.ossim.io
-        - prefix: dg
-          uri: http://digitalglobe.com
-        workspaces:
-        - name: 'dg-bucket-db-dev'
-          namespaceId: dg
-          params:
-            dbtype: postgis
-            host: localhost
-            port: 5432
-            database:  'dg-bucket-db-dev'
-            user: postgres
-            passwd: postgres
-            'Expose primary keys': true
-            namespace: http://digitalglobe.com
-        layers:
-        - name: image_collect
-          title: image collects
-          description: ''
-          keywords:
-          - 'dg'
-          - 'wv4'
-          - 'pan sharpen'
-          workspaceId: 'dg-bucket-db-dev'
-  production:
-    aws:
-      profileName: "svc_radiant_omar_1b"
-      bucketName: "dg-1b-3090-t1"
-      clientRegion: "us-east-1"
-
-    collects:
-      databaseName: 'dg-bucket-db-prod'
-
-    geoscript:
-      config:
-        namespaces:
-        - prefix: omar
-          uri: http://omar.ossim.io
-        - prefix: dg
-          uri: http://digitalglobe.com
-        workspaces:
-        - name: 'dg-bucket-db-prod'
-          namespaceId: dg
-          params:
-            dbtype: postgis
-            host: localhost
-            port: 5432
-            database:  'dg-bucket-db-prod'
-            user: postgres
-            passwd: postgres
-            'Expose primary keys': true
-            namespace: http://digitalglobe.com
-        layers:
-        - name: image_collect
-          title: image collects
-          description: ''
-          keywords:
-          - 'dg'
-          - 'wv4'
-          - 'pan sharpen'
-          workspaceId: 'dg-bucket-db-prod'
+geoscript:
+  config:
+    namespaces:
+    - prefix: omar
+      uri: http://omar.ossim.io
+    - prefix: dg
+      uri: http://digitalglobe.com
+    workspaces:
+    - name: 'dg-bucket-db-prod'
+      namespaceId: dg
+      params:
+        dbtype: postgis
+        host: localhost
+        port: 5432
+        database:  'dg-bucket-db-prod'
+        user: postgres
+        passwd: postgres
+        'Expose primary keys': true
+        namespace: http://digitalglobe.com
+    layers:
+    - name: collects
+      title: image collects
+      description: ''
+      keywords:
+      - 'dg'
+      - 'wv4'
+      - 'pan sharpen'
+      workspaceId: 'dg-bucket-db-prod'
 
