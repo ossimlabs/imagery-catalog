@@ -1,5 +1,8 @@
 import React, { Component } from "react";
+
+import { SERVER_URL, CLIENT_VERSION, REACT_VERSION } from "./config";
 import "whatwg-fetch";
+
 import { Button } from "mdbreact";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -8,17 +11,7 @@ import CollectsTable from "./CollectsTable";
 import moment from "moment";
 
 class App extends Component {
-  // constructor() {
-  //   super();
 
-  //   this.state = {
-  //     serverInfo: {},
-  //     clientInfo: {
-  //       version: CLIENT_VERSION,
-  //       react: REACT_VERSION
-  //     }
-  //   };
-  // }
   notify = (type, date) => {
     const notifyDate = moment(date).format("dddd, MMMM Do YYYY, h:mm:ss a");
     toast.success(`${type} scan started successfully on ${notifyDate} `, {
@@ -26,22 +19,19 @@ class App extends Component {
     });
   };
 
-  handleScan = type => {
+  handleScan = (type) => {
     console.log(`Handling ${type} Scan!`);
 
     fetch("http://localhost:8080/bucket/scanBucket", {
       method: "post",
-      body: JSON.stringify({ scanType: type })
+      body: JSON.stringify({ scanType: `${type}` })
     })
-      .then(r => {
-        if (r.status === 500) {
-          toast.error(r.status + " error while connecting to server", {
-            position: toast.POSITION.BOTTOM_CENTER
-          });
-        }
-        r.json();
-      })
+      .then(r => r.json())
       .then(json => {
+        if (json.error === 500) {
+          console.log("Server error!");
+        }
+
         this.notify(type, json.timeStarted);
       })
       .catch(error => console.error("Error connecting to server: " + error));
@@ -58,13 +48,10 @@ class App extends Component {
               <div className="col">
                 <h1>OMAR Imagery Catalog</h1>
               </div>
-              <Button color="primary" onClick={() => this.handleScan("Deep")}>
+              <Button color="primary" onClick={() => this.handleScan('deep')}>
                 Deep
               </Button>
-              <Button
-                color="primary"
-                onClick={() => this.handleScan("Incremental")}
-              >
+              <Button color="primary" onClick={() => this.handleScan('incremental')}>
                 Incremental
               </Button>
             </div>
