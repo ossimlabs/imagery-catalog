@@ -11,12 +11,18 @@ class BucketService
 	@Value( '${aws.profileName}' )
 	String profileName
 	
+	@Value( '${aws.clientRegion}' )
+	String clientRegion
+	
+	def quartzScheduler
+	
 	def scanBucket( JSONObject jsonObject )
 	{
 		def scanParams = [
 			scanType: jsonObject.scanType,
 			profileName: profileName,
 			bucketName: bucketName,
+			clientRegion: clientRegion
 		]
 		
 		ScanBucketJob.triggerNow( scanParams )

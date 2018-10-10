@@ -1,4 +1,4 @@
 ---
 quartz:
   autoStartup: true
-  jdbcStore: true
+  jdbcStore: false

@@ -37,7 +37,7 @@ class CollectsService
 	
 	def getTile( def params )
 	{
-		println params
+//		println params
 		
 		Integer width = params?.find { it.key.toUpperCase() == 'WIDTH' }?.value?.toInteger()
 		Integer height = params?.find { it.key.toUpperCase() == 'HEIGHT' }?.value?.toInteger()
@@ -51,7 +51,7 @@ class CollectsService
 
 		layer.style = stroke( color: 'blue' ) + fill( opacity: 0 )
 		
-		println  "proj: ${layer.proj}"
+//		println  "proj: ${layer.proj}"
 		
 		def bounds = new Bounds( *bbox, srs )
 		
@@ -61,11 +61,11 @@ class CollectsService
 			bounds: bounds,
 			proj: bounds.proj,
 			layers: [
-//				layer
+				layer
 			]
 		]
 		
-		println renderParams
+//		println renderParams
 		
 		def map = new GeoScriptMap( renderParams )
 		
