@@ -48,10 +48,10 @@ class App extends Component {
               <div className="col">
                 <h1>OMAR Imagery Catalog</h1>
               </div>
-              <Button color="primary" onClick={() => this.handleScan('deep')}>
+              <Button color="primary" onClick={() => this.handleScan('Deep')}>
                 Deep
               </Button>
-              <Button color="primary" onClick={() => this.handleScan('incremental')}>
+              <Button color="primary" onClick={() => this.handleScan('Incremental')}>
                 Incremental
               </Button>
             </div>
