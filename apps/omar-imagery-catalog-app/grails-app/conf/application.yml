@@ -1,3 +1,6 @@
+# ---
+# server:
+#   contextPath: /omar-imagery-catalog
 ---
 grails:
   servlet:
