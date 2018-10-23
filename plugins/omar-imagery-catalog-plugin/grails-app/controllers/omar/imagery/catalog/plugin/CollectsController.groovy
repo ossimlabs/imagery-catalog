@@ -12,6 +12,7 @@ class CollectsController implements AsyncController
 		
 		ctx.start {
 			render collectsService.getTile( params )
+			webRequest.renderView = false
 			ctx.complete()
 		}
 	}

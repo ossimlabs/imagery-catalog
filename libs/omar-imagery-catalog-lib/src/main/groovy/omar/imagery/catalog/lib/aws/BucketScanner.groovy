@@ -47,6 +47,7 @@ class BucketScanner
 					result?.commonPrefixes?.eachParallel { prefix ->
 						def key = "${ prefix }${ prefix[0..<-1] }_README.XML"
 						def fullObject
+						
 						try
 						{
 							def getObjectMetadataRequest = new GetObjectMetadataRequest( bucketName, key )
