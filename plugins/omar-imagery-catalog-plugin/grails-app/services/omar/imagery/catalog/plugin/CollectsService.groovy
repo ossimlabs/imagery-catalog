@@ -117,6 +117,8 @@ class CollectsService
 	
 	def getData( def query )
 	{
+//		println query
+		
 		def postgis = new PostGIS( databaseName, user: 'postgres' )
 		def layer = postgis['collects']
 		
@@ -124,7 +126,7 @@ class CollectsService
 			max: query.pageSize,
 			start: query.page,
 			filter: query.filtered ?: Filter.PASS,
-			order: query.ordered ?: [ [ 'id', 'ASC' ] ]
+			sort: query.sorted ? [ [ query.sorted, query.order ] ] : [ [ 'prefix','asc' ] ]
 		)?.collect { it.attributes }
 		
 		def count = layer.count( query.filtered ?: Filter.PASS )

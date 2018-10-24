@@ -19,10 +19,13 @@ class CollectsController implements AsyncController
 	
 	def getData()
 	{
+//		println params
+		
 		def query = [
 			pageSize: params.pageSize?.toInteger() ?: 10,
 			page: ( params.page?.toInteger() ?: 1 ) - 1,
 			sorted: params.sorted,
+			order: params.order,
 			filtered: params.filtered
 		]
 		

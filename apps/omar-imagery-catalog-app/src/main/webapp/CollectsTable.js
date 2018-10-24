@@ -5,10 +5,21 @@ import "react-table/react-table.css";
 
 
 const requestData = (pageSize, page, sorted, filtered) => {
+  console.log('sorted', sorted);
   return new Promise((resolve, reject) => {
     // You can retrieve your data however you want, in this case, we will just use some local data.
 
-   fetch(`/collects/getData?pageSize=${pageSize}&page=${page}&sorted=${sorted}&filtered=${filtered}`, {
+   let query = `pageSize=${pageSize}&page=${page}`;
+
+   if ( sorted !== 'undefined' && sorted.length > 0) {
+        query += `&sorted=${sorted[0].id}&order=${sorted[0].desc ? 'desc' : 'asc'}`;
+   }
+
+   if ( filtered !== 'undefined')  {
+        query += `&filtered=${filtered}`;
+   }
+
+   fetch(`/collects/getData?${query}`, {
           headers: {
             Accept: "application/json",
             "Content-Type": "application/json"
@@ -30,11 +41,6 @@ const requestData = (pageSize, page, sorted, filtered) => {
             "Something bad happened"
         )
       );
-    // You must return an object containing the rows of the current page, and optionally the total pages number.
-
-
-    // Here we'll simulate a server response with 500ms of delay.
-//    setTimeout(() => resolve(res), 500);
   });
 };
 
