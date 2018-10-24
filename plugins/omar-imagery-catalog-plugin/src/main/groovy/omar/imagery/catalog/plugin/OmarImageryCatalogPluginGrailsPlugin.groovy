@@ -1,9 +1,10 @@
 package omar.imagery.catalog.plugin
 
 import grails.plugins.*
-
+import grails.converters.JSON
+import geoscript.geom.Geometry
+import groovy.json.JsonSlurper
 import omar.imagery.catalog.plugin.GeoScriptConfig
-
 
 class OmarImageryCatalogPluginGrailsPlugin extends Plugin
 {
@@ -58,6 +59,7 @@ Brief summary/description of the plugin.
 	void doWithDynamicMethods()
 	{
 		// TODO Implement registering dynamic methods to classes (optional)
+		JSON.registerObjectMarshaller( Geometry ) { new JsonSlurper().parseText( it.geoJSON ) }
 	}
 	
 	void doWithApplicationContext()
