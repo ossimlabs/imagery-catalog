@@ -15,9 +15,17 @@ const requestData = (pageSize, page, sorted, filtered) => {
         query += `&sorted=${sorted[0].id}&order=${sorted[0].desc ? 'desc' : 'asc'}`;
    }
 
-   if ( filtered !== 'undefined')  {
-        query += `&filtered=${filtered}`;
+   if ( filtered !== 'undefined' && filtered.length > 0 )  {
+        let f = filtered.map( foo => `${foo.id} like '%${foo.value}%'`).join( ' and ');
+
+        f = encodeURI(f);
+        query += `&filtered=${f}`;
+
    }
+
+
+console.log('query', query);
+
 
    fetch(`/collects/getData?${query}`, {
           headers: {
