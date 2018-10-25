@@ -1,6 +1,7 @@
 package omar.imagery.catalog.plugin
 
 import geoscript.GeoScript
+import geoscript.filter.Filter
 import geoscript.geom.Bounds
 import geoscript.render.Map as GeoScriptMap
 import geoscript.workspace.PostGIS
@@ -48,9 +49,9 @@ class CollectsService
 		def ostream = new FastByteArrayOutputStream( width * height * 4 )
 		def postgis = new PostGIS( databaseName, user: 'postgres' )
 		def layer = postgis[layers]
-
-		layer.style = stroke( color: 'blue' ) + fill( opacity: 0 )
 		
+		layer.style = stroke( color: 'blue' ) + fill( opacity: 0 )
+
 //		println  "proj: ${layer.proj}"
 		
 		def bounds = new Bounds( *bbox, srs )
@@ -64,7 +65,7 @@ class CollectsService
 				layer
 			]
 		]
-		
+
 //		println renderParams
 		
 		def map = new GeoScriptMap( renderParams )
@@ -81,7 +82,7 @@ class CollectsService
 		{
 			map.close()
 		}
-
+		
 		postgis?.close()
 		
 		[ contentType: 'image/png', file: ostream.inputStream ]
@@ -112,5 +113,26 @@ class CollectsService
 				}
 			}
 		}
+	}
+	
+	def getData( def query )
+	{
+//		println query
+		
+		def postgis = new PostGIS( databaseName, user: 'postgres' )
+		def layer = postgis['collects']
+		
+		def data = layer.getFeatures(
+			max: query.pageSize,
+			start: query.page,
+			filter: query.filtered ?: Filter.PASS,
+			sort: query.sorted ? [ [ query.sorted, query.order ] ] : [ [ 'prefix','asc' ] ]
+		)?.collect { it.attributes }
+		
+		def count = layer.count( query.filtered ?: Filter.PASS )
+		
+		postgis?.close()
+		
+		[ count: count, data: data ]
 	}
 }
