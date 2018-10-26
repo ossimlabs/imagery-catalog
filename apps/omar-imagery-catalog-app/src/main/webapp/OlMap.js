@@ -1,19 +1,25 @@
 import React, { Component } from "react";
-import "ol/ol.css";
-import "ol-layerswitcher/src/ol-layerswitcher.css";
+import { altKeyOnly } from "ol/events/condition.js";
+import { DragBox, Draw, Select } from "ol/interaction.js";
+import Feature from "ol/Feature";
+import { fromExtent as polygonFromExtent } from "ol/geom/Polygon";
+import LayerGroup from "ol/layer/Group";
+import LayerSwitcher from "ol-layerswitcher";
 import Map from "ol/Map.js";
 import View from "ol/View.js";
-//import {defaults as defaultControls, ScaleLine} from 'ol/control.js';
-import LayerGroup from "ol/layer/Group";
+import { Style, Fill, Stroke } from "ol/style.js";
 import TileLayer from "ol/layer/Tile";
 import TileWMS from "ol/source/TileWMS.js";
-import LayerSwitcher from "ol-layerswitcher";
+import { Vector as VectorLayer } from "ol/layer.js";
+import { Vector as VectorSource } from "ol/source.js";
 import "./OlMap.css";
+import "ol/ol.css";
+import "ol-layerswitcher/src/ol-layerswitcher.css";
 
 class OlMap extends Component {
   initMap = params => {
-    var baseMaps;
-    var overlays;
+    let baseMaps = [];
+    let overlays = [];
 
     if (params.openLayersConfig.baseMaps) {
       baseMaps = params.openLayersConfig.baseMaps.map(function(item) {
@@ -48,18 +54,24 @@ class OlMap extends Component {
       overlays = [];
     }
 
-    //  overlays.push(
-    //     new Vector({
-    //        title: 'Area of Interest',
-    //        source: filterVectorSource,
-    //        visible: true,
-    //        extent: params.extent
-    //      })
-    //  );
+    const clearLayerSource = source => {
+      if (source.getFeatures().length >= 1) {
+        source.clear();
+      }
+    };
 
-    //  var filterVectorSource = new source.Vector({
-    //      wrapX: false
-    //  });
+    const filterVectorSource = new VectorSource({
+      wrapX: false
+    });
+
+    overlays.push(
+      new VectorLayer({
+        title: "Area of Interest",
+        source: filterVectorSource,
+        visible: true,
+        extent: params.extent
+      })
+    );
 
     var layers = [
       new LayerGroup({
@@ -90,47 +102,49 @@ class OlMap extends Component {
       })
     });
 
-    //  var extent = params.extent;
+    //  const extent = params.extent;
     //  map.getView().fit(extent, map.getSize());
 
-    var layerSwitcher = new LayerSwitcher({
-      tipLabel: "Légende" // Optional label for button
+    const layerSwitcher = new LayerSwitcher({
+      tipLabel: "Legend" // Optional label for button
     });
     map.addControl(layerSwitcher);
 
-    //  var dragBox = new ol.interaction.DragBox({
-    //      condition: ol.events.condition.altKeyOnly,
-    //      source: filterVectorSource,
-    //      type: 'Circle',
-    //      geometryFunction: ol.interaction.Draw.createBox()
-    //  });
+    const dragBox = new DragBox({
+      condition: altKeyOnly,
+      source: filterVectorSource,
+      type: "Circle"
+      //geometryFunction: Draw.createBox()
+    });
 
-    //map.addInteraction(dragBox);
+    map.addInteraction(dragBox);
 
-    //  var filterStyle = new ol.style.Style({
-    //    fill: new ol.style.Fill({
-    //      color: "rgba(255, 100, 50, 0.2)"
-    //    }),
-    //    stroke: new ol.style.Stroke({
-    //      width: 5.0,
-    //      color: "rgba(255, 100, 50, 0.6)"
-    //    })
-    //  });
+    const filterStyle = new Style({
+      fill: new Fill({
+        color: "rgba(255, 100, 50, 0.2)"
+      }),
+      stroke: new Stroke({
+        width: 5.0,
+        color: "rgba(255, 100, 50, 0.6)"
+      })
+    });
 
-    //  dragBox.on("boxend", function() {
-    //    clearLayerSource(filterVectorSource);
+    dragBox.on("boxend", function() {
+      clearLayerSource(filterVectorSource);
 
-    //    var dragBoxExtent = dragBox.getGeometry().getExtent();
+      const dragBoxExtent = dragBox.getGeometry().getExtent();
 
-    //    var searchPolygon = new ol.Feature({
-    //      geometry: new ol.geom.Polygon.fromExtent(dragBoxExtent)
-    //    });
+      const dragboxPoly = polygonFromExtent(dragBoxExtent);
 
-    //    searchPolygon.setStyle(filterStyle);
-    //    filterVectorSource.addFeatures([searchPolygon]);
+      const searchPolygon = new Feature({
+        geometry: dragboxPoly
+      });
 
-    //    console.log(dragBoxExtent);
-    //  });
+      searchPolygon.setStyle(filterStyle);
+      filterVectorSource.addFeatures([searchPolygon]);
+
+      console.log(dragBoxExtent);
+    });
   };
 
   componentDidMount() {
