@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import { altKeyOnly } from "ol/events/condition.js";
+import CollectsTable from "./CollectsTable";
+import "./CollectsTable.css";
 import { DragBox, Draw, Select } from "ol/interaction.js";
 import Feature from "ol/Feature";
 import { fromExtent as polygonFromExtent } from "ol/geom/Polygon";
@@ -17,6 +19,10 @@ import "ol/ol.css";
 import "ol-layerswitcher/src/ol-layerswitcher.css";
 
 class OlMap extends Component {
+  state = {
+    mapBbox: [],
+  }
+
   initMap = params => {
     let baseMaps = [];
     let overlays = [];
@@ -129,7 +135,7 @@ class OlMap extends Component {
       })
     });
 
-    dragBox.on("boxend", function() {
+    dragBox.on("boxend", () => {
       clearLayerSource(filterVectorSource);
 
       const dragBoxExtent = dragBox.getGeometry().getExtent();
@@ -144,15 +150,22 @@ class OlMap extends Component {
       filterVectorSource.addFeatures([searchPolygon]);
 
       console.log(dragBoxExtent);
+      this.setState({mapBbox: dragBoxExtent});
+      this.child.getNewData();
+
     });
   };
 
   componentDidMount() {
     this.initMap(PARAMS);
+    console.log('map state: ', this.state.mapBbox);
   }
 
   render() {
-    return <div id="map" />;
+    return (
+      <div id="map">
+        <CollectsTable mapData={this.state.mapBbox} ref={instance => { this.child = instance; }}/>
+      </div>);
   }
 }
 
