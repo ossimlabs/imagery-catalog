@@ -6,30 +6,30 @@ import grails.converters.JSON
 class CollectsController implements AsyncController
 {
 	CollectsService collectsService
-	
+
 	def getTile()
 	{
 		def ctx = startAsync()
-		
+
 		ctx.start {
 			render collectsService.getTile( params )
 			webRequest.renderView = false
 			ctx.complete()
 		}
 	}
-	
+
 	def getData()
 	{
 		println params
-		
+
 		def query = [
 			pageSize: params.pageSize?.toInteger() ?: 10,
 			page: ( params.page?.toInteger() ?: 1 ) - 1,
 			sorted: params.sorted,
 			order: params.order,
-			filtered: params.filtered
+			filter: params.filter
 		]
-		
+
 		def results = collectsService.getData( query )
 		render contentType: 'application/json', text: [
 			columns: [ [

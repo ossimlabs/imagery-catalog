@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 //import "whatwg-fetch";
 import OlMap from "./OlMap";
-import CollectsTable from "./CollectsTable";
+//import CollectsTable from "./CollectsTable";
 import { Button } from "mdbreact";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -60,9 +60,7 @@ class MapCatalog extends Component {
               </div>
             </div>
             <div className="row">
-              <div className="col">
-                <CollectsTable />
-              </div>
+              <div className="col">{/* <CollectsTable /> */}</div>
             </div>
           </div>
         </div>
