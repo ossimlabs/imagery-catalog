@@ -1,24 +1,25 @@
 import React from "react";
 import ReactTable from "react-table";
+import { Button } from "mdbreact";
+import CollectDetails from "./CollectDetails"
 import "./CollectsTable.css";
 import "react-table/react-table.css";
 
-
 class CollectsTable extends React.Component {
-
   state = {
     data: [],
     pages: null,
     loading: true,
     columns: [],
     filtered: this.props,
+    selectedRow: null,
+    selectedImage: null,
+    expanded: {}
   };
 
-  fetchData = (state) => {
-
+  fetchData = state => {
     // show the loading overlay
-    this.setState({loading: true})
-    //console.log('state: ', state);
+    this.setState({ loading: true });
 
     let query = `pageSize=${state.pageSize}&page=${state.page}`;
 
@@ -28,48 +29,29 @@ class CollectsTable extends React.Component {
       }`;
     }
 
-    // if (filtered !== undefined && filtered.length > 0) {
-    //   let f = filtered
-    //     .map(filter => `${filter.id} like '%${filter.value}%'`)
-    //     .join(" and ");
-
-    //   f = encodeURI(f);
-    //   query += `&filtered=${f}`;
-    // }
-
-    //console.log('PROPS ===', this.props.mapData.toString());
-    //const mapBbox = `BBOX(the_geom, ${this.props.mapData.toString()})`;
-    //console.log('mapBbox: ', mapBbox);
-
-    console.log('PROPS ===', this.props.mapData);
-    if(this.props.mapData.length){
-      const mapBbox = encodeURI(`BBOX(the_geom, ${this.props.mapData.toString()})`);
-      console.log('mapBbox: ', mapBbox);
-      query += `&filter=${mapBbox}`
+    if (this.props.mapData.length) {
+      const mapBbox = encodeURI(
+        `BBOX(the_geom, ${this.props.mapData.toString()})`
+      );
+      query += `&filter=${mapBbox}`;
     }
-
-
 
     fetch(`/collects/getData?${query}`)
       .then(function(response) {
         return response.json();
       })
       .then(json => {
-
         this.setState({
           data: json.data,
           pages: json.pages,
           loading: false
         });
-
       })
       .catch(error => console.error(`Something bad happened: ${error}`));
-
-  }
+  };
 
   componentDidMount() {
     let _this = this;
-    //console.log('this.props in componentDidMount(): ', this.props)
     fetch("/collects/getData", {
       headers: {
         Accept: "application/json",
@@ -80,30 +62,23 @@ class CollectsTable extends React.Component {
         return response.json();
       })
       .then(collectJson => {
+        console.log('columns', collectJson.columns);
         _this.setState({ columns: collectJson.columns });
-        //console.log(_this.state);
       })
       .catch(error => console.error("Something bad happened"));
   }
 
-  // componentDidUpdate(prevProps, prevState){
-  //   if(this.props !== prevProps.mapBbox) {
-  //     //console.log('props !== prevProps');
-  //     let _this = this;
-  //     // TODO: This is where we need to execute the new query,
-  //     //       and pass in the new mapBbox
-  //     //_this.refReactTable.fireFetchData();
-  //   }
-  // }
+  pullImage= () => {
+    console.log(`Pull imagery for: ${this.state.selectedImage}`);
+  }
+
   getNewData() {
-    console.log('Calling getNewData() in the child');
     this.refReactTable.fireFetchData();
   }
   render() {
     const { columns, data, pages, loading } = this.state;
 
     return (
-
       <div id="collectsTable">
         <ReactTable
           columns={columns}
@@ -114,7 +89,88 @@ class CollectsTable extends React.Component {
           onFetchData={this.fetchData} // Request new data when things change
           defaultPageSize={10}
           className="-striped -highlight"
-          ref={(refReactTable) => {this.refReactTable = refReactTable;}}
+          // getTdProps={(state, rowInfo, column, instance) => {
+          //   return {
+          //     onClick: (e, handleOriginal) => {
+          //       let pull = confirm(
+          //         `Pull image ${rowInfo.original.prefix} from S3?`
+          //       );
+          //       if (pull) {
+          //         this.pullImage(rowInfo.original.prefix);
+          //       } else {
+          //         return;
+          //       }
+
+          //       // IMPORTANT! React-Table uses onClick internally to trigger
+          //       // events like expanding SubComponents and pivots.
+          //       // By default a custom 'onClick' handler will override this functionality.
+          //       // If you want to fire the original onClick handler, call the
+          //       // 'handleOriginal' function.
+          //       if (handleOriginal) {
+          //         handleOriginal();
+          //       }
+          //     }
+          //   };
+          // }}
+          // getTrProps={(state, rowInfo) => {
+          //   if (rowInfo && rowInfo.row) {
+          //     return {
+          //       onClick: e => {
+          //         this.setState({
+          //           selectedRow: rowInfo.index,
+          //           selectedImage: rowInfo.original.prefix
+          //         });
+          //       },
+          //       style: {
+          //         background:
+          //           rowInfo.index === this.state.selectedRow ? "#33b5e5" : "white",
+          //         color:
+          //           rowInfo.index === this.state.selectedRow ? "white" : "black"
+          //       }
+          //     };
+          //   } else {
+          //     return {};
+          //   }
+          // }}
+          expanded={this.state.expanded}
+          onExpandedChange={(newExpanded, index, event) => {
+            if (newExpanded[index[0]] === false) {
+                newExpanded = {}
+            } else {
+                Object.keys(newExpanded).map(k => {
+                    newExpanded[k] = parseInt(k) === index[0] ? {} : false
+                })
+            }
+            this.setState({
+                expanded: newExpanded
+            })
+          }}
+          SubComponent={row => {
+            return (
+                <CollectDetails/>
+              // <div className="row" style={{padding: '20px'}}>
+              //   <div className="col-md-2"><div style={{paddingTop: '20px'}}><Button onClick={this.pullImage} color="primary">Pull Imagery</Button></div></div>
+              //   <div className="col-md-2">
+              //     <img className="img-fluid hoverable" src="https://omar-dev.ossim.io/omar-oms/imageSpace/getThumbnail?&filename=/data/s3/o2-test-data/b9a34414-adc1-4510-a8e3-9812eae321b3/17MAR20054817-M1BS-056599362010_01_P004.NTF&id=12721&entry=0&size=114&outputFormat=png&transparent=true&padThumbnail=false" alt=""/>
+              //   </div>
+              //   <div className="col-md-2">
+              //     <img className="img-fluid" src="https://omar-dev.ossim.io/omar-oms/imageSpace/getThumbnail?&filename=/data/s3/o2-test-data/b9a34414-adc1-4510-a8e3-9812eae321b3/17MAR20054817-M1BS-056599362010_01_P004.NTF&id=12721&entry=0&size=114&outputFormat=png&transparent=true&padThumbnail=false" alt=""/>
+              //   </div>
+              //   <div className="col-md-2">
+              //     <img className="img-fluid" src="https://omar-dev.ossim.io/omar-oms/imageSpace/getThumbnail?&filename=/data/s3/o2-test-data/b9a34414-adc1-4510-a8e3-9812eae321b3/17MAR20054817-M1BS-056599362010_01_P004.NTF&id=12721&entry=0&size=114&outputFormat=png&transparent=true&padThumbnail=false" alt=""/>
+              //   </div>
+              //   <div className="col-md-2">
+              //     <img className="img-fluid" src="https://omar-dev.ossim.io/omar-oms/imageSpace/getThumbnail?&filename=/data/s3/o2-test-data/b9a34414-adc1-4510-a8e3-9812eae321b3/17MAR20054817-M1BS-056599362010_01_P004.NTF&id=12721&entry=0&size=114&outputFormat=png&transparent=true&padThumbnail=false" alt=""/>
+              //   </div>
+              //   <div className="col-md-2">
+              //     <img className="img-fluid" src="https://omar-dev.ossim.io/omar-oms/imageSpace/getThumbnail?&filename=/data/s3/o2-test-data/b9a34414-adc1-4510-a8e3-9812eae321b3/17MAR20054817-M1BS-056599362010_01_P004.NTF&id=12721&entry=0&size=114&outputFormat=png&transparent=true&padThumbnail=false" alt=""/>
+              //   </div>
+              // </div>
+            );
+          }}
+          ref={refReactTable => {
+            this.refReactTable = refReactTable;
+          }}
         />
       </div>
     );
