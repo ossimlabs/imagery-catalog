@@ -62,13 +62,12 @@ class CollectsTable extends React.Component {
         return response.json();
       })
       .then(collectJson => {
-        console.log('columns', collectJson.columns);
         _this.setState({ columns: collectJson.columns });
       })
       .catch(error => console.error("Something bad happened"));
   }
 
-  pullImage= () => {
+  pullAllImagery= () => {
     console.log(`Pull imagery for: ${this.state.selectedImage}`);
   }
 
@@ -147,25 +146,12 @@ class CollectsTable extends React.Component {
           }}
           SubComponent={row => {
             return (
-                <CollectDetails/>
-              // <div className="row" style={{padding: '20px'}}>
-              //   <div className="col-md-2"><div style={{paddingTop: '20px'}}><Button onClick={this.pullImage} color="primary">Pull Imagery</Button></div></div>
-              //   <div className="col-md-2">
-              //     <img className="img-fluid hoverable" src="https://omar-dev.ossim.io/omar-oms/imageSpace/getThumbnail?&filename=/data/s3/o2-test-data/b9a34414-adc1-4510-a8e3-9812eae321b3/17MAR20054817-M1BS-056599362010_01_P004.NTF&id=12721&entry=0&size=114&outputFormat=png&transparent=true&padThumbnail=false" alt=""/>
-              //   </div>
-              //   <div className="col-md-2">
-              //     <img className="img-fluid" src="https://omar-dev.ossim.io/omar-oms/imageSpace/getThumbnail?&filename=/data/s3/o2-test-data/b9a34414-adc1-4510-a8e3-9812eae321b3/17MAR20054817-M1BS-056599362010_01_P004.NTF&id=12721&entry=0&size=114&outputFormat=png&transparent=true&padThumbnail=false" alt=""/>
-              //   </div>
-              //   <div className="col-md-2">
-              //     <img className="img-fluid" src="https://omar-dev.ossim.io/omar-oms/imageSpace/getThumbnail?&filename=/data/s3/o2-test-data/b9a34414-adc1-4510-a8e3-9812eae321b3/17MAR20054817-M1BS-056599362010_01_P004.NTF&id=12721&entry=0&size=114&outputFormat=png&transparent=true&padThumbnail=false" alt=""/>
-              //   </div>
-              //   <div className="col-md-2">
-              //     <img className="img-fluid" src="https://omar-dev.ossim.io/omar-oms/imageSpace/getThumbnail?&filename=/data/s3/o2-test-data/b9a34414-adc1-4510-a8e3-9812eae321b3/17MAR20054817-M1BS-056599362010_01_P004.NTF&id=12721&entry=0&size=114&outputFormat=png&transparent=true&padThumbnail=false" alt=""/>
-              //   </div>
-              //   <div className="col-md-2">
-              //     <img className="img-fluid" src="https://omar-dev.ossim.io/omar-oms/imageSpace/getThumbnail?&filename=/data/s3/o2-test-data/b9a34414-adc1-4510-a8e3-9812eae321b3/17MAR20054817-M1BS-056599362010_01_P004.NTF&id=12721&entry=0&size=114&outputFormat=png&transparent=true&padThumbnail=false" alt=""/>
-              //   </div>
-              // </div>
+              <div className="row">
+                <div className="col-md-10 offset-md-1">
+                  <Button onClick={this.pullAllImagery} color="default">Pull All Imagery</Button>
+                  <CollectDetails prefix={row.original.prefix}/>
+                </div>
+              </div>
             );
           }}
           ref={refReactTable => {
