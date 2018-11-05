@@ -20,8 +20,8 @@ import "ol-layerswitcher/src/ol-layerswitcher.css";
 
 class OlMap extends Component {
   state = {
-    mapBbox: [],
-  }
+    mapBbox: []
+  };
 
   initMap = params => {
     let baseMaps = [];
@@ -150,22 +150,26 @@ class OlMap extends Component {
       filterVectorSource.addFeatures([searchPolygon]);
 
       console.log(dragBoxExtent);
-      this.setState({mapBbox: dragBoxExtent});
+      this.setState({ mapBbox: dragBoxExtent });
       this.child.getNewData();
-
     });
   };
 
   componentDidMount() {
     this.initMap(PARAMS);
-    console.log('map state: ', this.state.mapBbox);
   }
 
   render() {
     return (
       <div id="map">
-        <CollectsTable mapData={this.state.mapBbox} ref={instance => { this.child = instance; }}/>
-      </div>);
+        <CollectsTable
+          mapData={this.state.mapBbox}
+          ref={instance => {
+            this.child = instance;
+          }}
+        />
+      </div>
+    );
   }
 }
 
