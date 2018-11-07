@@ -67,8 +67,8 @@ class CollectsTable extends React.Component {
       .catch(error => console.error("Something bad happened"));
   }
 
-  pullAllImagery= () => {
-    console.log(`Pull imagery for: ${this.state.selectedImage}`);
+  pullAllImagery= (prefix) => {
+    console.log(`Pull imagery for: ${prefix}`);
   }
 
   getNewData() {
@@ -148,7 +148,7 @@ class CollectsTable extends React.Component {
             return (
               <div className="row">
                 <div className="col-md-10 offset-md-1">
-                  <Button onClick={this.pullAllImagery} color="default">Pull All Imagery</Button>
+                  <Button onClick={() => this.pullAllImagery(row.original.prefix)} color="default">Pull All Files</Button>
                   <CollectDetails prefix={row.original.prefix}/>
                 </div>
               </div>

@@ -57,7 +57,7 @@ const mockData = [{
 
 class CollectDetails extends React.Component {
 
-    constructor(props) {
+    constructor() {
       super();
       this.state = {
         data: mockData
@@ -67,26 +67,16 @@ class CollectDetails extends React.Component {
       console.log(`Pull image ${image}`);
     }
     render(){
-      let { data } = this.state;
-      console.log('props: ', this.props);
-      data = data.map((row) => {
-        row.ImgPath = row.preview;
-        return row;
-      })
+      const { data } = this.state;
       return (
         <div>
             <ReactTable
-              data={ data }
+              data={data}
               columns={[
                 {
                   Header: "Preview",
                   accessor: "preview",
-                  Cell: (row) => {
-                    return (
-                      <div>
-                        <img src={row.original.ImgPath} />
-                      </div>)
-                  }
+                  Cell: row => <img src={row.original.preview} />
                 },
                 {
                   Header: "Path",
@@ -102,12 +92,7 @@ class CollectDetails extends React.Component {
                 },
                 {
                   Header: 'Pull',
-                  Cell: (row) => {
-                    return (
-                      <div>
-                        <Button onClick={() => this.pullImage(row.original.path)} color="primary">Pull Image</Button>
-                      </div>)
-                  }
+                  Cell: row => <Button onClick={() => this.pullImage(row.original.path)} color="primary">Pull File</Button>
                 }
               ]}
               defaultPageSize={10}
