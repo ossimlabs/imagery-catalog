@@ -1,6 +1,6 @@
 ---
 quartz:
   autoStartup: true
-  jdbcStore: true
-  jobStore:
-    driverDelegateClass: org.quartz.impl.jdbcjobstore.PostgreSQLDelegate
+#  jdbcStore: true
+#  jobStore:
+#    driverDelegateClass: org.quartz.impl.jdbcjobstore.PostgreSQLDelegate
